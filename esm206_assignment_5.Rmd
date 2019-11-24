@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ### Introduction:
@@ -15,14 +15,177 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Results:
 
+```{r}
+#attach packages
+library(tidyverse)
+library(janitor)
+library(kableExtra)
+library(ggbeeswarm)
+library(here)
+library(effsize)
+library(ggridges)
+```
+
+```{r}
+#read in data and clean names
+mack_creek <- read_csv(here::here("raw_data", "mack_creek_vertebrates.csv")) %>% 
+  clean_names()
+  
+```
+
 ##### A.
+```{r}
+#group Giant Pac. Sals by year and count vy section
+pacific_sal_n <- mack_creek %>% 
+  filter(species == "DITE") %>% 
+  group_by(year) %>% 
+  count(section)
+  
+```
+
+```{r}
+ggplot(pacific_sal_n, aes(x = year, y = n)) +
+  geom_line(aes(color = section))
+
+```
+**Figure 1.**
 
 ##### B.
 
+```{r}
+pacific_sal_class <- mack_creek %>%
+  filter(year =="2017", species == "DITE", 
+         unittype %in% c("C", "P", "SC")) %>%
+  count(unittype, section)
+
+pacific_sal_table <- pacific_sal_class %>% 
+  pivot_wider(names_from = unittype, values_from = n)
+
+pacific_sal_props <- pacific_sal_table %>% 
+  adorn_percentages(denominator = "row") %>% 
+  adorn_pct_formatting(digits = 1) %>% 
+  adorn_ns(position = "front")
+
+kable(pacific_sal_props) %>% 
+  kable_styling()
+```
+
 ##### C.
 
+```{r}
+#chi-square test for measuring proportions
+chi_sal <- pacific_sal_table %>% 
+  select(-section)
+
+chi_sal_test <- chisq.test(chi_sal)
+chi_sal_test
+
+```
+p value is > .05, there is no evidence of an association between section and class (they're independent)
+
 ##### D.
+```{r, echo = FALSE}
+sal_weight_section <- mack_creek %>% 
+  select(year, species, section, weight) %>% 
+  filter(year == "2017", species == "DITE") %>% 
+  group_by(section) %>% 
+  mutate(
+    mean_weight = mean(weight)
+  )
+
+#visually exlore data for normality with
+ggplot(sal_weight_section, aes(x = weight)) +
+  geom_histogram() +
+  facet_wrap(~section)
+
+#explore with quantile quantile plots too
+ggplot(sal_weight_section, aes(sample = weight)) +
+  geom_qq() +
+  facet_wrap(~section)
+
+#they don't look normally distributed, BUT sample size is large enough that the central limit theorem applies- means are normally distributed
+```
+
+```{r}
+#create vector of salamander weights for CC
+sal_cc <- sal_weight_section %>% 
+  filter(section == "CC") %>% 
+  pull(weight)
+
+#create vector of salamander weights for OG
+sal_og <- sal_weight_section %>% 
+  filter(section == "OG") %>% 
+  pull(weight)
+
+#t-test, salamander weights OG vs CC
+sal_og_cc_tt <- t.test(sal_cc, sal_og)
+#p > .05, no significant difference
+
+#calculate Cohen's d
+sal_og_cc_d <- cohen.d(sal_cc, sal_og, na.rm = TRUE)
+#smol d, smol effect size p accurate
+```
+
 
 ##### E. 
+
+```{r}
+sal_weight_class <- mack_creek %>% 
+  select(year, species, unittype, weight) %>% 
+  filter(year == "2017", species == "DITE", 
+         unittype %in% c("C", "P", "SC")) %>% 
+  group_by(unittype) %>% 
+  mutate(
+    mean_weight = mean(weight, na.rm = TRUE),
+    sd_weight = sd(weight, na.rm = TRUE)
+  )
+
+```
+
+```{r}
+ggplot(sal_weight_class, aes(x = unittype, y = weight)) +
+  geom_beeswarm(size = 1, alpha = .4, 
+                color = "seagreen") +
+  geom_point(aes(x = unittype, y = mean_weight),
+             size = 2) +
+  geom_errorbar(aes(x = unittype,
+                    ymin = 0,
+                   ymax = mean_weight + sd_weight),
+                width = 0.1)
+```
+**Figure 2.**
+
+```{r}
+#visually explore to check for normality:
+ggplot(sal_weight_class, aes(x = weight)) +
+  geom_histogram() +
+  facet_wrap(~unittype)
+
+#explore with quantile quantile plots too
+ggplot(sal_weight_class, aes(sample = weight)) +
+  geom_qq() +
+  facet_wrap(~unittype)
+
+#they don't look normal, but central limit theorem makes our lives easy
+```
+
+
+```{r}
+#ANOVA! 
+
+sal_class_aov <- aov(weight ~ unittype, 
+                     data = sal_weight_class)
+summary(sal_class_aov)
+#we get a significant difference between at least one group
+#so now we have to do post-hoc test
+
+#tukey-test
+TukeyHSD(sal_class_aov)
+
+```
+The only two that have a significant difference in means are Side channels and pools. (p < .05)
+
+
+iii) concerns: there are a lot of outliers, so means are skewed, so maybe medians are better 
 
 ### Summary:
