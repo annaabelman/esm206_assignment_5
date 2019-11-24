@@ -9,9 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
-### Introduction:
+### Introduction: (EMMA)
 
-### Data Methods:
+### Data Methods: (ANNA)
 
 ### Results:
 
@@ -48,10 +48,10 @@ ggplot(pacific_sal_n, aes(x = year, y = n)) +
   geom_line(aes(color = section))
 
 ```
-**Figure 1.**
+**Figure 1.** ADD CAPTION AND MAKE PRETTY AND ANALYZE (EMMA)
 
 ##### B.
-
+**Table 1**: ADD CAPTION AND MAKE PRETTY (ANNA)
 ```{r}
 pacific_sal_class <- mack_creek %>%
   filter(year =="2017", species == "DITE", 
@@ -78,13 +78,15 @@ chi_sal <- pacific_sal_table %>%
   select(-section)
 
 chi_sal_test <- chisq.test(chi_sal)
-chi_sal_test
+
 
 ```
-p value is > .05, there is no evidence of an association between section and class (they're independent)
+
+
+There is no significant effect of forest condition (old growth or clear cut) on where in the channel salamanders are found (channel classification) ($\chi$^2^(`r chi_sal_test$parameter`) = `r round(chi_sal_test$statistic, 2)`, *p* = `r round(chi_sal_test$p.value, 2)`),(*p* > 0.05).**TALK ABOUT ACTUAL PROPORTIONS**
 
 ##### D.
-```{r, echo = FALSE}
+```{r, include = FALSE}
 sal_weight_section <- mack_creek %>% 
   select(year, species, section, weight) %>% 
   filter(year == "2017", species == "DITE") %>% 
@@ -106,6 +108,7 @@ ggplot(sal_weight_section, aes(sample = weight)) +
 #they don't look normally distributed, BUT sample size is large enough that the central limit theorem applies- means are normally distributed
 ```
 
+
 ```{r}
 #create vector of salamander weights for CC
 sal_cc <- sal_weight_section %>% 
@@ -126,6 +129,23 @@ sal_og_cc_d <- cohen.d(sal_cc, sal_og, na.rm = TRUE)
 #smol d, smol effect size p accurate
 ```
 
+```{r}
+# creating values of each of the analysis to use in text
+#means
+mean_cc <- mean(sal_cc)
+mean_og <- mean(sal_og)
+
+#standard deviation
+sd_cc <- sd(sal_cc)
+sd_og <- sd(sal_og)
+
+#sample size
+n_cc <- length(sal_cc)
+n_og <- length(sal_og)
+```
+
+
+In 2017, the mean weights of the Pacific Giant Salamanders in clear cut forest sections (`r round(mean_cc, 2)` $\pm$ `r round(sd_cc, 2)`, n = `r n_cc`) did not differ significantly from old growth forest sections (`r round(mean_og, 2)` $\pm$ `r round(sd_og, 2)`, n = `r n_og`) by a unpaired two-sample t-test (t(`r round(sal_og_cc_tt$parameter, 2)`) = `r round(sal_og_cc_tt$statistic, 2)`, *p* > 0.005). The Cohen's d calculation (d = `r round(sal_og_cc_d$estimate, 2)`, *d* < 0.2) shows a small effect size, so our p-value is most likely accurate.
 
 ##### E. 
 
@@ -153,9 +173,9 @@ ggplot(sal_weight_class, aes(x = unittype, y = weight)) +
                    ymax = mean_weight + sd_weight),
                 width = 0.1)
 ```
-**Figure 2.**
+**Figure 2.** ADD CAPTION AND MAKE PRETTY AND ANALYZE
 
-```{r}
+```{r, include = FALSE}
 #visually explore to check for normality:
 ggplot(sal_weight_class, aes(x = weight)) +
   geom_histogram() +
@@ -176,6 +196,9 @@ ggplot(sal_weight_class, aes(sample = weight)) +
 sal_class_aov <- aov(weight ~ unittype, 
                      data = sal_weight_class)
 summary(sal_class_aov)
+sal_aov_outputs <- unlist(summary(sal_class_aov))
+
+sal_aov_outputs
 #we get a significant difference between at least one group
 #so now we have to do post-hoc test
 
@@ -185,7 +208,11 @@ TukeyHSD(sal_class_aov)
 ```
 The only two that have a significant difference in means are Side channels and pools. (p < .05)
 
-
+Mean weight of Pacific Giant Salamanders (g) did not differ significantly across pools, channels, and side channels (one-way ANOVA, F(r sal_aov_outputs[1], r sal_aov_outputs[2]) = r round(sal_aov_outputs[7],2, *p* = r round(sal_aov_outputs[9], 3)).
+** ANALYZE MEAN DIFFERENCES, PERCENT DIFFERENCES, AND EFFECT SIZES**
 iii) concerns: there are a lot of outliers, so means are skewed, so maybe medians are better 
 
 ### Summary:
+
+
+### References
