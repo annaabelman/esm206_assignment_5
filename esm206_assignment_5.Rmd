@@ -40,6 +40,26 @@ pacific_sal_n <- mack_creek %>%
   filter(species == "DITE") %>% 
   group_by(year) %>% 
   count(section)
+
+og_n_93 <- pacific_sal_n %>% 
+  filter(year == "1993", section == "OG") %>%
+  mutate(n = as.numeric(n))
+
+og_n_17 <- pacific_sal_n %>% 
+  filter(year == "2017", section == "OG") %>%
+  mutate(n = as.numeric(n))
+
+pct_change_og <-  round(((og_n_17$n - og_n_93$n) / og_n_93$n) * 100, 1)
+
+cc_n_93 <- pacific_sal_n %>% 
+  filter(year == "1993", section == "CC") %>%
+  mutate(n = as.numeric(n))
+  
+cc_n_17 <- pacific_sal_n %>% 
+  filter(year == "2017", section == "CC") %>%
+  mutate(n = as.numeric(n))
+
+pct_change_cc <- round(((cc_n_17$n - cc_n_93$n) / cc_n_93$n) * 100, 1)
   
 ```
 
@@ -64,10 +84,11 @@ ggplot(pacific_sal_n, aes(x = year, y = n)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(expand = c(0,0), limits = c(1993, 2017)) +
   scale_y_continuous(expand = c(0,0), limits = c(50, 400)) 
-  
 
 ```
-**Figure 1.** ADD CAPTION AND MAKE PRETTY AND ANALYZE (EMMA)
+**Figure 1.** Pacific Giant Salamander counts (individuals) in Mack Creek in old growth areas (green) and clear cut areas (brown) from 1993-2017. Abundance increased in both areas over time, with both following similar variational trends. 
+
+From 1993-2017, Pacific Giant Salamander abundance in Mack Creek follows a similar trend in both old growth forest and clear cut areas. Overall, salamanders in both locations increased greatly in abundance during the time period, in old growth by `r pct_change_og`% and in clear cut by `r pct_change_cc`%. 
 
 ##### B.
 **Table 1**: ADD CAPTION AND MAKE PRETTY (ANNA)
