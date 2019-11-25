@@ -24,6 +24,7 @@ library(ggbeeswarm)
 library(here)
 library(effsize)
 library(ggridges)
+library(knitr)
 ```
 
 ```{r}
@@ -35,7 +36,7 @@ mack_creek <- read_csv(here::here("raw_data", "mack_creek_vertebrates.csv")) %>%
 
 ##### A.
 ```{r}
-#group Giant Pac. Sals by year and count vy section
+#group Giant Pac. Sals by year and count vs section
 pacific_sal_n <- mack_creek %>% 
   filter(species == "DITE") %>% 
   group_by(year) %>% 
@@ -106,8 +107,11 @@ pacific_sal_props <- pacific_sal_table %>%
   adorn_pct_formatting(digits = 1) %>% 
   adorn_ns(position = "front")
 
-kable(pacific_sal_props) %>% 
-  kable_styling()
+kable(pacific_sal_props, col.names = c("Section","Channels", "Pools", "Side Channels"))%>% 
+  kable_styling(bootstrap_options = c("striped","hover","condensed","responsive"), 
+                full_width = F,
+                position = "center",
+                font_size = 15)
 ```
 
 ##### C.
@@ -211,7 +215,12 @@ ggplot(sal_weight_class, aes(x = unittype, y = weight)) +
   geom_errorbar(aes(x = unittype,
                     ymin = 0,
                    ymax = mean_weight + sd_weight),
-                width = 0.1)
+                width = 0.1)+
+  scale_x_discrete(labels = c("Channels", "Pools", "Side Channels"))+
+  labs(x = "Class Classification", y = "Weight (g)", title = "Distribution of Pacific Giant Salamander Weight for Each Classification")+
+  theme_minimal()+
+  theme(plot.title = element_text(size = 11.5))
+
 ```
 **Figure 2.** ADD CAPTION AND MAKE PRETTY AND ANALYZE
 
