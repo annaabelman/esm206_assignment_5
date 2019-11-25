@@ -88,7 +88,7 @@ ggplot(pacific_sal_n, aes(x = year, y = n)) +
 ```
 **Figure 1.** Pacific Giant Salamander counts (individuals) in Mack Creek in old growth areas (green) and clear cut areas (brown) from 1993-2017. Abundance increased in both areas over time, with both following similar variational trends. 
 
-From 1993-2017, Pacific Giant Salamander abundance in Mack Creek follows a similar trend in both old growth forest and clear cut areas. Overall, salamanders in both locations increased greatly in abundance during the time period, in old growth by `r pct_change_og`% and in clear cut by `r pct_change_cc`%. 
+From 1993-2017, Pacific Giant Salamander abundance in Mack Creek follows a similar trend in both old growth forest and clear cut areas. Overall, salamanders in both locations increased greatly in abundance during the time period, in old growth by `r pct_change_og`% and in clear cut by `r pct_change_cc`%. While salamander population increased overall, both locations experienced a sharp decline from 2011 to 2014, most likely due to an environmental stressor outside the scope of this report. After 2014, populations starting rising again. Salamander abundance was slightly higher in old growth forests also until 2014, when the trend switched and clear cur areas had slightly more salamanders.
 
 ##### B.
 **Table 1**: ADD CAPTION AND MAKE PRETTY (ANNA)
