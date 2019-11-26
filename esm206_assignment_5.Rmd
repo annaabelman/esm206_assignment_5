@@ -102,12 +102,17 @@ pacific_sal_class <- mack_creek %>%
 pacific_sal_table <- pacific_sal_class %>% 
   pivot_wider(names_from = unittype, values_from = n)
 
+
 pacific_sal_props <- pacific_sal_table %>% 
   adorn_percentages(denominator = "row") %>% 
   adorn_pct_formatting(digits = 1) %>% 
-  adorn_ns(position = "front")
+  adorn_ns(position = "front") %>% 
+  select(-section)
 
-kable(pacific_sal_props, col.names = c("Section","Channels", "Pools", "Side Channels"))%>% 
+  rownames(pacific_sal_props) = c("Clear Cut", "Old Growth")
+  
+
+kable(pacific_sal_props, col.names = c("Channels", "Pools", "Side Channels"))%>% 
   kable_styling(bootstrap_options = c("striped","hover","condensed","responsive"), 
                 full_width = F,
                 position = "center",
@@ -177,15 +182,19 @@ sal_og_cc_d <- cohen.d(sal_cc, sal_og, na.rm = TRUE)
 # creating values of each of the analysis to use in text
 #means
 mean_cc <- mean(sal_cc)
-mean_og <- mean(sal_og)
+mean_og <- mean(sal_og, na.rm = TRUE)
 
 #standard deviation
 sd_cc <- sd(sal_cc)
-sd_og <- sd(sal_og)
+sd_og <- sd(sal_og, na.rm = TRUE)
 
 #sample size
 n_cc <- length(sal_cc)
 n_og <- length(sal_og)
+
+#standard error
+se_cc <- sd_cc/sqrt(n_cc)
+se_og <- sd_og/sqrt(n_og)
 ```
 
 
@@ -201,7 +210,8 @@ sal_weight_class <- mack_creek %>%
   group_by(unittype) %>% 
   mutate(
     mean_weight = mean(weight, na.rm = TRUE),
-    sd_weight = sd(weight, na.rm = TRUE)
+    sd_weight = sd(weight, na.rm = TRUE),
+    se_weight = sd(weight, na.rm = TRUE)/sqrt(n())
   )
 
 ```
@@ -211,10 +221,10 @@ ggplot(sal_weight_class, aes(x = unittype, y = weight)) +
   geom_beeswarm(size = 1, alpha = .4, 
                 color = "seagreen") +
   geom_point(aes(x = unittype, y = mean_weight),
-             size = 2) +
+             size = 1) +
   geom_errorbar(aes(x = unittype,
-                    ymin = 0,
-                   ymax = mean_weight + sd_weight),
+                    ymin = mean_weight - se_weight,
+                   ymax = mean_weight + se_weight),
                 width = 0.1)+
   scale_x_discrete(labels = c("Channels", "Pools", "Side Channels"))+
   labs(x = "Class Classification", y = "Weight (g)", title = "Distribution of Pacific Giant Salamander Weight for Each Classification")+
