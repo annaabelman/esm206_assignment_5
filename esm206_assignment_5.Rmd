@@ -11,7 +11,8 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 ### Introduction: (EMMA)
 
-### Data Methods: (ANNA)
+### Data Methods: 
+The data for the Pacific Giant Salamanders in Mack Creek in Oregon from 1993-2017  were provided by [Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest](https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702).
 
 ### Results:
 
@@ -92,7 +93,7 @@ ggplot(pacific_sal_n, aes(x = year, y = n)) +
 From 1993-2017, Pacific Giant Salamander abundance in Mack Creek follows a similar trend in both old growth forest and clear cut areas. Overall, salamanders in both locations increased greatly in abundance during the time period, in old growth by `r pct_change_og`% and in clear cut by `r pct_change_cc`%. While salamander population increased overall, both locations experienced a sharp decline from 2011 to 2014, most likely due to an environmental stressor outside the scope of this report. After 2014, populations starting rising again. Salamander abundance was slightly higher in old growth forests also until 2014, when the trend switched and clear cur areas had slightly more salamanders.
 
 ##### B.
-**Table 1**: ADD CAPTION AND MAKE PRETTY (ANNA)
+**Table 1**: The number of Pacific Giant Salamanders in clear cut and old growth areas found specificially in channels, pools, and side channels. The proportion of each location is shown as percentages.
 ```{r}
 pacific_sal_class <- mack_creek %>%
   filter(year =="2017", species == "DITE", 
@@ -116,7 +117,7 @@ kable(pacific_sal_props, col.names = c("Channels", "Pools", "Side Channels"))%>%
   kable_styling(bootstrap_options = c("striped","hover","condensed","responsive"), 
                 full_width = F,
                 position = "center",
-                font_size = 15)
+                font_size = 13)
 ```
 
 ##### C.
@@ -127,8 +128,6 @@ chi_sal <- pacific_sal_table %>%
   select(-section)
 
 chi_sal_test <- chisq.test(chi_sal)
-
-
 ```
 
 
@@ -179,7 +178,8 @@ sal_og_cc_d <- cohen.d(sal_cc, sal_og, na.rm = TRUE)
 ```
 
 ```{r}
-# creating values of each of the analysis to use in text
+
+#creating values of each of the analysis to use in text
 #means
 mean_cc <- mean(sal_cc)
 mean_og <- mean(sal_og, na.rm = TRUE)
@@ -195,6 +195,7 @@ n_og <- length(sal_og)
 #standard error
 se_cc <- sd_cc/sqrt(n_cc)
 se_og <- sd_og/sqrt(n_og)
+
 ```
 
 
@@ -217,6 +218,27 @@ sal_weight_class <- mack_creek %>%
 ```
 
 ```{r}
+#classification vectors
+n_channel <- sal_weight_class %>% 
+  filter(unittype == "C") %>% 
+  pull(unittype)
+
+n_side_channel <- sal_weight_class %>% 
+  filter(unittype == "SC") %>% 
+  pull(unittype)
+
+n_pools <- sal_weight_class %>% 
+  filter(unittype == "P") %>% 
+  pull(unittype)
+# counts of each classificiation to be used in in-line referencing
+num_channel <- length(n_channel)
+num_side_channel <- length(n_side_channel)
+num_pools <- length(n_pools)
+```
+
+
+
+```{r}
 ggplot(sal_weight_class, aes(x = unittype, y = weight)) +
   geom_beeswarm(size = 1, alpha = .4, 
                 color = "seagreen") +
@@ -232,7 +254,7 @@ ggplot(sal_weight_class, aes(x = unittype, y = weight)) +
   theme(plot.title = element_text(size = 11.5))
 
 ```
-**Figure 2.** ADD CAPTION AND MAKE PRETTY AND ANALYZE
+**Figure 2.** Pacific Giant Salamander's weight distribution (g) (shown in green) and mean weight (black dot) (g) found at the classifications: channels(n = `r num_channel`), pools (n = `r num_pools`), and side channels (n = `r num_side_channel`). The black dot indicates the mean weight, while the bars show the standard error at each all three classification.
 
 (maybe standard error instead of standard deviation) Mention outliers, means, standard deviations. There's a lot more observations in general in channels
 
@@ -251,7 +273,7 @@ ggplot(sal_weight_class, aes(sample = weight)) +
 ```
 
 
-```{r}
+```{r, include = FALSE}
 #ANOVA! 
 
 sal_class_aov <- aov(weight ~ unittype, 
@@ -274,6 +296,10 @@ Mean weight of Pacific Giant Salamanders (g) did not differ significantly across
 iii) concerns: there are a lot of outliers, so means are skewed, so maybe medians are better 
 
 ### Summary:
+ -
+ -
+ -
 
 
 ### References
+Gregory S. V. 2016. Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present. Environmental Data Initiative. https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702. Dataset accessed 11/25/2019.
