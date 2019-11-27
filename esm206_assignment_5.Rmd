@@ -22,6 +22,7 @@ library(knitr)
 
 ```
 ![](pacific_giant_salamander_pic.jpg)
+Image from:https://blogs.scientificamerican.com/tetrapod-zoology/the-pacific-giant-salamanders/
 
 ### Introduction: (EMMA)
 
@@ -299,6 +300,7 @@ The only two that have a significant difference in means are Side channels and p
 Mean weight of Pacific Giant Salamanders (g) did not differ significantly across pools, cascades, and side channels (one-way ANOVA, F(`r sal_aov_outputs[1]`, `r sal_aov_outputs[2]`) = `r round(sal_aov_outputs[7],2)`, *p* = `r round(sal_aov_outputs[9], 3)`).
 ** ANALYZE MEAN DIFFERENCES, PERCENT DIFFERENCES, AND EFFECT SIZES**
 iii) concerns: there are a lot of outliers, so means are skewed, so maybe medians are better 
+
 
 ### Summary:
 -
