@@ -9,13 +9,6 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
-### Introduction: (EMMA)
-
-### Data Methods: 
-The data for the Pacific Giant Salamanders in Mack Creek in Oregon from 1993-2017  were provided by [Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest](https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702).
-
-### Results:
-
 ```{r}
 #attach packages
 library(tidyverse)
@@ -26,7 +19,19 @@ library(here)
 library(effsize)
 library(ggridges)
 library(knitr)
+
 ```
+![](pacific_giant_salamander_pic.jpg)
+
+### Introduction: (EMMA)
+
+
+### Data Methods: 
+The data for the Pacific Giant Salamanders in Mack Creek in Oregon from 1993-2017 were provided by [Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest](https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702). The two location of sampling sections were in the clear cut forest and an old coniferous forest. The unit type was also recorded and classified as cascade, side channel and pool. All samples of Pacific Giant Salamanders were measured and weight (g) at each section throughout the time period. Changes in population size from 1993-2017 were based on the abundance of salamanders found each year. The association between the classification type and section type was determined by a Chi-Squared test. Salamander weight distribution (g) for 2017 was compared at the three specified classification times, including the mean and standard error. The mean salamander size for each were analyzed by a one-way ANOVA test and Tukey's test. The entire analysis was performed using R software 3.6.1. Additional information about data can be found by viewing the [metadata](https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-and.4027.12).
+
+### Results:
+
+
 
 ```{r}
 #read in data and clean names
@@ -93,7 +98,7 @@ ggplot(pacific_sal_n, aes(x = year, y = n)) +
 From 1993-2017, Pacific Giant Salamander abundance in Mack Creek follows a similar trend in both old growth forest and clear cut areas. Overall, salamanders in both locations increased greatly in abundance during the time period, in old growth by `r pct_change_og`% and in clear cut by `r pct_change_cc`%. While salamander population increased overall, both locations experienced a sharp decline from 2011 to 2014, most likely due to an environmental stressor outside the scope of this report. After 2014, populations starting rising again. Salamander abundance was slightly higher in old growth forests also until 2014, when the trend switched and clear cur areas had slightly more salamanders.
 
 ##### B.
-**Table 1**: The number of Pacific Giant Salamanders in clear cut and old growth areas found specificially in channels, pools, and side channels. The proportion of each location is shown as percentages.
+**Table 1**: The number of Pacific Giant Salamanders in clear cut and old growth areas found specificially in cascade, pools, and side channels. The proportion of each location is shown as percentages.
 ```{r}
 pacific_sal_class <- mack_creek %>%
   filter(year =="2017", species == "DITE", 
@@ -113,7 +118,7 @@ pacific_sal_props <- pacific_sal_table %>%
   rownames(pacific_sal_props) = c("Clear Cut", "Old Growth")
   
 
-kable(pacific_sal_props, col.names = c("Channels", "Pools", "Side Channels"))%>% 
+kable(pacific_sal_props, col.names = c("Cascades", "Pools", "Side Channels"))%>% 
   kable_styling(bootstrap_options = c("striped","hover","condensed","responsive"), 
                 full_width = F,
                 position = "center",
@@ -248,13 +253,13 @@ ggplot(sal_weight_class, aes(x = unittype, y = weight)) +
                     ymin = mean_weight - se_weight,
                    ymax = mean_weight + se_weight),
                 width = 0.1)+
-  scale_x_discrete(labels = c("Channels", "Pools", "Side Channels"))+
+  scale_x_discrete(labels = c("Cascades", "Pools", "Side Channels"))+
   labs(x = "Class Classification", y = "Weight (g)", title = "Distribution of Pacific Giant Salamander Weight for Each Classification")+
   theme_minimal()+
   theme(plot.title = element_text(size = 11.5))
 
 ```
-**Figure 2.** Pacific Giant Salamander's weight distribution (g) (shown in green) and mean weight (black dot) (g) found at the classifications: channels(n = `r num_channel`), pools (n = `r num_pools`), and side channels (n = `r num_side_channel`). The black dot indicates the mean weight, while the bars show the standard error at each all three classification.
+**Figure 2.** Pacific Giant Salamander's weight distribution (g) (shown in green) and mean weight (black dot) (g) found at the classifications: cascades(n = `r num_channel`), pools (n = `r num_pools`), and side channels (n = `r num_side_channel`). The black dot indicates the mean weight, while the bars show the standard error at each all three classification.
 
 (maybe standard error instead of standard deviation) Mention outliers, means, standard deviations. There's a lot more observations in general in channels
 
@@ -291,15 +296,15 @@ TukeyHSD(sal_class_aov)
 ```
 The only two that have a significant difference in means are Side channels and pools. (p < .05)
 
-Mean weight of Pacific Giant Salamanders (g) did not differ significantly across pools, channels, and side channels (one-way ANOVA, F(`r sal_aov_outputs[1]`, `r sal_aov_outputs[2]`) = `r round(sal_aov_outputs[7],2)`, *p* = `r round(sal_aov_outputs[9], 3)`).
+Mean weight of Pacific Giant Salamanders (g) did not differ significantly across pools, cascades, and side channels (one-way ANOVA, F(`r sal_aov_outputs[1]`, `r sal_aov_outputs[2]`) = `r round(sal_aov_outputs[7],2)`, *p* = `r round(sal_aov_outputs[9], 3)`).
 ** ANALYZE MEAN DIFFERENCES, PERCENT DIFFERENCES, AND EFFECT SIZES**
 iii) concerns: there are a lot of outliers, so means are skewed, so maybe medians are better 
 
 ### Summary:
- -
- -
- -
+-
+-
+-
 
 
-### References
+### References:
 Gregory S. V. 2016. Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present. Environmental Data Initiative. https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702. Dataset accessed 11/25/2019.
