@@ -322,3 +322,5 @@ While t-tests and ANOVAs were determined to be valid tests for this data, a comp
 
 ### References:
 Gregory S. V. 2016. Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present. Environmental Data Initiative. https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702. Dataset accessed 11/25/2019.
+
+Pacific Giant Salamanders: Dicamptodontidae. (2019, November 24). Retrieved December 2, 2019, from https://www.encyclopedia.com/science/encyclopedias-almanacs-transcripts-and-maps/pacific-giant-salamanders-dicamptodontidae.
