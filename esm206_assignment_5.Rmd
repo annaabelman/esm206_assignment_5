@@ -1,5 +1,5 @@
 ---
-title: "ESM206 Assignment 5"
+title: "Analyzing Pacific Giant Salamander Populations in Mack Creek"
 author: "Emma Friedl & Anna Abelman"
 date: "11/23/2019"
 output: html_document
@@ -143,7 +143,7 @@ chi_sal_test <- chisq.test(chi_sal)
 ```
 
 
-There is no significant effect of forest condition (old growth or clear cut) on where in the channel salamanders are found (channel classification) ($\chi$^2^(`r chi_sal_test$parameter`) = `r round(chi_sal_test$statistic, 2)`, *p* = `r round(chi_sal_test$p.value, 2)`),(*p* > 0.05).**TALK ABOUT ACTUAL PROPORTIONS**
+There is no significant effect of forest condition (old growth or clear cut) on where in the channel salamanders are found (channel classification) ($\chi$^2^(`r chi_sal_test$parameter`) = `r round(chi_sal_test$statistic, 2)`, *p* = `r round(chi_sal_test$p.value, 2)`),(*p* > 0.05). Additionally, the percentages for each classification are very similar in clear cut and old growth forest conditions, suggesting there is no distinguishable difference between the two conditions. The channel classification with the highest percentage of abundance in both forest conditions is the cascades, while the lowest is the pools.  
 
 
 ##### D. T-test for Mean Weight Differences 
@@ -253,6 +253,7 @@ num_pools <- length(n_pools)
 
 
 ```{r}
+#visually exporing the the distribution of the salamanders weight and show the mean and standard error
 ggplot(sal_weight_class, aes(x = unittype, y = weight)) +
   geom_beeswarm(size = 1, alpha = .4, 
                 color = "seagreen") +
