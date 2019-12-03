@@ -127,8 +127,8 @@ pacific_sal_props <- pacific_sal_table %>%
 kable(pacific_sal_props, col.names = c("Cascades", "Pools", "Side Channels"))%>% 
   kable_styling(bootstrap_options = c("striped","hover","condensed","responsive"), 
                 full_width = F,
-                position = "center",
-                font_size = 13)
+                position = "left",
+                font_size = 15)
 ```
 
 
